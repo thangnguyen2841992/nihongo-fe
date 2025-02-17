@@ -11,6 +11,7 @@ function Register() {
     const [address, setAddress] = useState('');
     const [gender, setGender] = useState('Male');
     const [birthDay, setBirthDay] = useState('');
+    const userRoles = ['ROLE_USER'];
 
     const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFirstName(e.target.value);
@@ -42,9 +43,9 @@ function Register() {
     const handleBirthDayChange = (e: ChangeEvent<HTMLInputElement>) => {
         setBirthDay(e.target.value);
     }
-    
-    const handleSubmit = async (e : React.FormEvent) => {
-            e.preventDefault();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
 
         try {
             const url: string = `http://localhost:8080/users/register`;
@@ -63,24 +64,32 @@ function Register() {
                         phone: phone.trim(),
                         gender: gender,
                         address: address.trim(),
-                        birthday: birthDay.trim()
+                        birthday: birthDay.trim(),
+                        role: userRoles
                     })
                 }
             );
 
             if (response.ok) {
                 // showSuccessMessage();
-
-                setFirstName('');
-                setLastName('');
-                setUsername('');
-                setPassword('');
-                setConfirmPassword('');
-                setEmail('');
-                setPhone('');
-                setAddress('');
-                setGender('Male');
-
+                const data = await response.text();
+                if (data === "User registered successfully") {
+                    alert('Đăng Ký Tài Khoản Thành Công.');
+                    setFirstName('');
+                    setLastName('');
+                    setUsername('');
+                    setPassword('');
+                    setConfirmPassword('');
+                    setEmail('');
+                    setPhone('');
+                    setAddress('');
+                    setGender('Male');
+                    setBirthDay('');
+                } else if (data === "Invalid birthday") {
+                    alert("Bạn nhâp sai định dạng ngày tháng năm sinh.");
+                } else if(data === "Passwords do not match") {
+                    alert("Bạn nhập chưa đúng xác nhận mật khẩu.")
+                }
                 // navigate('/login')
             } else {
                 console.log(response.json());
@@ -105,20 +114,22 @@ function Register() {
                     <div className="col-md-6">
                         <div className="form-register-item">
                             <label htmlFor="firstName" className="form-label">Họ Và Tên Đệm</label>
-                            <input placeholder={'Nguyễn Văn'} onChange={handleFirstNameChange} type="text" className="form-control is-valid"
+                            <input placeholder={'Nguyễn Văn'} onChange={handleFirstNameChange} type="text"
+                                   className="form-control is-valid"
                                    required
                                    id="firstName" value={firstName}/>
                         </div>
                         <div className="form-register-item">
                             <label htmlFor="lastName" className="form-label">Tên</label>
-                            <input placeholder={'A'} onChange={handleLastNameChange} type="text" className="form-control is-valid"
+                            <input placeholder={'A'} onChange={handleLastNameChange} type="text"
+                                   className="form-control is-valid"
                                    required
                                    id="lastName" value={lastName}/>
                         </div>
                         <div className="form-register-item">
                             <label htmlFor="username" className="form-label">Tên Tài Khoản</label>
                             <input placeholder={'username1'} onChange={handleUsernameChange} type="text"
-                                   // className={"form-control" + (!isErrorUsername ? " is-valid" : " is-invalid")}
+                                // className={"form-control" + (!isErrorUsername ? " is-valid" : " is-invalid")}
                                    className={"form-control is-valid"}
                                    id="username" value={username}/>
                             {/*<div className="invalid-feedback">{errorUsername}</div>*/}
@@ -126,7 +137,7 @@ function Register() {
                         <div className="form-register-item">
                             <label htmlFor="password" className="form-label">Mật Khẩu</label>
                             <input placeholder={'*******'} onChange={handlePasswordChange} type="password"
-                                   // className={"form-control" + (!isErrorPassword ? " is-valid" : " is-invalid")}
+                                // className={"form-control" + (!isErrorPassword ? " is-valid" : " is-invalid")}
                                    className={"form-control is-valid"}
                                    id="password" value={password}/>
                             {/*<div className="invalid-feedback">{errorPassword}</div>*/}
@@ -134,7 +145,7 @@ function Register() {
                         <div className="form-register-item">
                             <label htmlFor="confirmPassword" className="form-label">Xác Nhận Mật Khẩu</label>
                             <input placeholder={'*******'} onChange={handleConfirmPasswordChange} type="password"
-                                   // className={"form-control" + (!isErrorConfirmPassword ? " is-valid" : " is-invalid")}
+                                // className={"form-control" + (!isErrorConfirmPassword ? " is-valid" : " is-invalid")}
                                    className={"form-control is-valid"}
                                    id="confirmPassword" value={confirmPassword}/>
                             {/*<div className="invalid-feedback">{errorConfirmPassword}</div>*/}
@@ -162,7 +173,8 @@ function Register() {
                         </div>
                         <div className="form-register-item">
                             <label htmlFor="address" className="form-label">Địa Chỉ</label>
-                            <input placeholder={'example'} onChange={handleAddressChange} type="text" className="form-control is-valid" required
+                            <input placeholder={'example'} onChange={handleAddressChange} type="text"
+                                   className="form-control is-valid" required
                                    id="address" value={address}/>
                         </div>
                         <div className="form-register-item">
@@ -171,7 +183,8 @@ function Register() {
                             <div className="gender-wrapper d-flex">
                                 <div className="form-check" style={{marginRight: '50px'}}>
                                     <input onChange={handleGenderChange} className="form-check-input" type="radio"
-                                           name="flexRadioDefault" id="male" value={'Male'} checked={gender === 'Male'}/>
+                                           name="flexRadioDefault" id="male" value={'Male'}
+                                           checked={gender === 'Male'}/>
                                     <label className="form-check-label" htmlFor="male">Nam</label>
                                 </div>
                                 <div className="form-check">
@@ -185,7 +198,8 @@ function Register() {
                         </div>
                         <div className="form-register-item">
                             <label htmlFor="address" className="form-label">Sinh Nhật(DD/MM/YYYY)</label>
-                            <input placeholder={'28/04/199x'} onChange={handleBirthDayChange} type="text" className="form-control is-valid" required
+                            <input placeholder={'28/04/199x'} onChange={handleBirthDayChange} type="text"
+                                   className="form-control is-valid" required
                                    id="address" value={birthDay}/>
                         </div>
 
