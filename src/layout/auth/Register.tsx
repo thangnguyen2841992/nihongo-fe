@@ -93,7 +93,7 @@ function Register() {
                 // navigate('/login')
             } else {
                 console.log(response.json());
-                // alert("Đã xảy ra lỗi trong quá trình đăng ký tài khoản.")
+                alert("Đã xảy ra lỗi trong quá trình đăng ký tài khoản.");
                 // ErrorMessage();
             }
         } catch (error) {
