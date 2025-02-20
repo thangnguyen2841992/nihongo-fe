@@ -10,7 +10,7 @@ function ActiveAccount() {
         }
     }, []);
     const activeAcc = async () => {
-        const url = `http://localhost:8080/ACCOUNT-SERVICE/users/active?username=${username}`;
+        const url = `http://localhost:8080/users/active?username=${username}`;
         try {
             const response = await fetch(url, {method: 'PUT'});
             if (response.ok) {

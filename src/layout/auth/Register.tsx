@@ -48,7 +48,7 @@ function Register() {
         e.preventDefault();
 
         try {
-            const url: string = `http://localhost:8080/ACCOUNT-SERVICE/users/register`;
+            const url: string = `http://localhost:8080/users/register`;
             const response = await fetch(url, {
                     method: 'POST',
                     headers: {
